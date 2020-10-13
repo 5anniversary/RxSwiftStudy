@@ -1,22 +1,27 @@
-# RxSwift Study🔥
+<h1 align="center"> :fire: RxSwift Study   X   SOPT iOS :fire: </h1> 
+</br>
+  
+<p align="center"> <img src="https://www.thedroidsonroids.com/wp-content/uploads/2016/02/Rx_Logo_M-390x390.png" width="150"> </p>
 
-<img src="https://www.thedroidsonroids.com/wp-content/uploads/2016/02/Rx_Logo_M-390x390.png" width="100">
+</br>
 
-## Goal
+### :seedling: Goal
 
 - 27기 앱잼에서 RxSwift를 이용해 프로젝트를 구성합니다.
 
 
+</br>
 
-## Rule
+### :herb: Rule
 
 - 주 1회 스터디 모임을 합니다.
 - 정해진 커리큘럼에 따라 담당 챕터를 공부하며 스터디를 준비합니다.
 - 2020년 12월 26일 까지 진행합니다.
 
 
+</br>
 
-## Curriculum
+### :deciduous_tree: Curriculum
 
 | Week | Subject                                          | Presenter                                                    |
 | ---- | ------------------------------------------------ | ------------------------------------------------------------ |
