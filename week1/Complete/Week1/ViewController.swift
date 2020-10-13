@@ -19,18 +19,11 @@ class ViewController: UIViewController {
         
         return textField
     }()
-    
-    lazy var tableView: UITableView = {
-       let tableView = UITableView()
         
-        
-        return tableView
-    }()
-    
     lazy var button: UIButton = {
        let button = UIButton()
         
-        
+        button.isHidden = true
         
         return button
     }()
@@ -42,27 +35,28 @@ class ViewController: UIViewController {
         
         layout()
     
+        
+        // Operator
         textField.rx.text
             .filter { text in
-                if text == "123" {
-                    return true
-                } else {
+                if text == "버튼 나와랏!" {
+                    self.button.isHidden = false
                     return false
+                } else if text == "버튼 없어져랏!" {
+                    self.button.isHidden = true
+                    return false
+                } else {
+                    return true
                 }
             }.subscribe(onNext: { text in
                 print(text ?? "")
             }).disposed(by: disposeBag)
-            
-        
-        button.rx.tap.subscribe { event in
+
+        // Observer
+        button.rx.tap.subscribe(onNext: { next in
+            // tap시 textField를 초기화시켜준다
             self.textField.text = ""
-        } onError: { (error) in
-            print(error)
-        } onCompleted: {
-            print("")
-        } onDisposed: {
-            print("")
-        }.disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     func layout() {
@@ -88,22 +82,4 @@ class ViewController: UIViewController {
     }
     
     
-}
-
-extension ViewController: UITableViewDelegate {
-    
-}
-
-extension ViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        return UITableViewCell()
-    }
-
 }
