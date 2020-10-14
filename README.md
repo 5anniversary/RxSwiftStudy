@@ -1,6 +1,6 @@
 <h1 align="center"> :fire: RxSwift Study   X   SOPT iOS :fire: </h1> 
 </br>
-  
+
 <p align="center"> <img src="https://www.thedroidsonroids.com/wp-content/uploads/2016/02/Rx_Logo_M-390x390.png" width="150"> </p>
 
 </br>
@@ -25,7 +25,7 @@
 
 | Week | Subject                                          | Presenter                                                    |
 | ---- | ------------------------------------------------ | ------------------------------------------------------------ |
-| 1    | Hello, RxSwift!                                  | [5anniversary](https://github.com/5anniversary)              |
+| 1    | [Hello, RxSwift!](week1.md)                      | [5anniversary](https://github.com/5anniversary)              |
 | 2    | Observserbles                                    | [MinseungSeon](https://github.com/minseungseon)              |
 | 3    | Subjects                                         | [freemjstudio](https://github.com/freemjstudio)              |
 | 4    | Flitering Operators                              | [이과정](https://github.com/gwajeong)                        |
