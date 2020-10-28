@@ -37,7 +37,6 @@ class ViewController: UIViewController {
 
         // Observer
         
-        
         // Operator
         
         
