@@ -1,0 +1,6 @@
+framework module Pods_rxswiftExercises_rxswiftExercisesUITests {
+  umbrella header "Pods-rxswiftExercises-rxswiftExercisesUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
