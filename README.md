@@ -27,7 +27,7 @@
 | ---- | ------------------------------------------------ | ------------------------------------------------------------ |
 | 1    | [Hello, RxSwift!](week1.md)                      | [5anniversary](https://github.com/5anniversary)              |
 | 2    | [Observserbles](week2.md)                                    | [MinseungSeon](https://github.com/minseungseon)              |
-| 3    | Subjects                                         | [freemjstudio](https://github.com/freemjstudio)              |
+| 3    | [Subjects](week3.md)                                         | [freemjstudio](https://github.com/freemjstudio)              |
 | 4    | Flitering Operators                              | [이과정](https://github.com/gwajeong)                        |
 | 5    | Transforming                                     | [Jaeyong](https://github.com/wody27)                         |
 | 6    | Combining Operators                              | [Yunjae](https://github.com/qodhrkawk)                       |
