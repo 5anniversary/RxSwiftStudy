@@ -195,7 +195,7 @@ stop event 를 새로운 subscribers에게 emit 한다 라고 책에는 복잡�
 
 새로운 코드입니다 짠 확인해봅시당
 
-```
+```swift
 enum MyError:Error {
     case anError
 }
@@ -383,12 +383,50 @@ subject.onNext("4") //new element
 
 3) 에서는 buffer size 2로 replay된 subject가 더해지게 되었습니다. 좀 전의 예시에서 replay된 것 처럼 말이죠.
 
+자 여기서 끝내면 밋밋하니 한 줄 더 실험해봅시다 ^_^
+
+```swift
+
+subject.onError(MyError.anError)
+
+```
+ 
+ 음 결과가 어떨지 짐작이 가시나요?? 책에서는
+ 
+ 
+ ```
+ 1) 4
+ 2) 4
+ 1) anError
+ 2) anError
+ 3) 3
+ 3) 4
+ 3) anError
+ 
+ ```
+ 
+ 
+ This may surprise you. and if so, that's OK *Life is full of surpurises*
+ 라고 하네요
 
 
+replay subject는 error와 함께 종료됩니다. 그러니까 첫번째 두번째 subscriptions 는 이제 byebye
+그렇지만 여전히 buffer는 hanging around 할거니까 새로운 subscribers가 있으면 (여기서는 3) ) stop Event 가 다시 방출되기 이전까지 (anError)
+element들이 방출되겠네요!!
+
+마지막으로 한가지 더!!
+
+다음의 코드를 error event를 추가해준 코드 다음 줄에 바로 추가해 주세요
+
+ ```
+ subject.dispose()
+ ```
+
+그러면 콘솔에서 이미 이 subject는 disposed 되었다는 메세지가 뜹니다. new subscribers 는 error event만 받기 때문이죠!!
 
 * 전체코드
 
-```
+```swift
 example(of : "ReplaySubject") {
     
     let subject = ReplaySubject<String>.create(bufferSize: 2)
