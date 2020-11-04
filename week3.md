@@ -283,15 +283,53 @@ console에는 X값이 출력되는 것을 확인할 수 있어요. 왜냐하면 
 
 * Replay Subject   
 : 초기화 된 buffer size로 시작한다. 그 사이즈까지 buffer의 원소들을 유지하며 새로운 subscriber들에게 방출한다. 
+이름 그대로 buffer size 에 도달할 때까지 계속 방출해준다(replay한다)는 의미라고 이해하면 쉬울 것 같아요. replay subject는 일시적인 캐시 (혹은 buffer) 에서 가장 최신의 elements를 반복하여 방출합니다.
 
-저는 공부하면서 이 Replay Subject가 가장 인상깊었어요. :_어려웠거든요 ^_^ 특히 그림이랑 같이 이해하려고 하는게 중요했던 것 같아요 
+
+저는 공부하면서 이 Replay Subject가 가장 인상깊었어요. 
 
 ![스크린샷 2020-11-04 오후 12 32 54](https://user-images.githubusercontent.com/41604678/98066300-f984ed80-1e99-11eb-99ee-34f87edca10c.png)
 
 
 
-이름 그대로 buffer size 에 도달할 때까지 계속 방출해준다는 의미라고 이해하면 쉬울 것 같아요. 다른 개념들을 여기까지 이해했다면 쉽게 이해할 수 있어요.
 
+여기에 나오는 다이어그램은 buffer size가 얼마일까요 ?? 
+
+
+
+.
+.
+.
+.
+.
+.
+buffer size가 바로 2라고 짐작이 가시나요? replay되는 elements 들이 1) 2) 두개니까 buffer size 는 2 가 됩니다 ~~
+
+두번 째 라인에 있는 첫번째 subscriber는 이미 맨 첫번째 줄에 있는 replay subject에 구독된 상태입니다. 그래서 그들이 방출될때 요소들을 갖게 됩니다. 두번째 subscriber는 1번, 2번을 또 다시 방출하게 되는 것이지요 (책에서는 반복해서 값을 방출하는걸 replay라고 표현함)
+
+주의할 점!!
+이 replay subject를 사용할 때는 buffer가 메모리 안에서 보존되는 것이므로 이미지파일처럼 용량을 왕창 잡아먹는 인스턴스들을 replay시키는 size가 큰 buffer를 설정해두면..?
+각각의 방출되는 elements들은 array가 될것이고 buffer size는 그 많은 array들을 가지고 있어야만 해요 그러니까 메모리에 부담을 줄 수 있으니 사용시에 이런 경우는 주의하는 것이 좋습니다
+
+
+```swift
+example(of : "ReplaySubject") {
+    
+    let subject = ReplaySubject<String>.create(bufferSize: 2)
+    
+    // created new replay subject with a buffer size of 2. Replay subjects are initialized using the type method create(bufferSize: )
+    
+    let disposeBag = DisposeBag()
+    
+    subject.onNext("1")
+    subject.onNext("2")
+    subject.onNext("3")
+    //add three elements onto the subjects
+    
+    subject.subscrib{
+        print(label: "1)", event: $0)
+    }.disposed(by: disposeBag)
+```
 
 
 
@@ -300,6 +338,53 @@ console에는 X값이 출력되는 것을 확인할 수 있어요. 왜냐하면 
 여기서 책은 한줄 더 추가해보라고 시킵니다 ㅎㅎ
 
 
+
+
+* 전체코드
+
+```
+example(of : "ReplaySubject") {
+    
+    let subject = ReplaySubject<String>.create(bufferSize: 2)
+    
+    // created new replay subject with a buffer size of 2. Replay subjects are initialized using the type method create(bufferSize: )
+    
+    let disposeBag = DisposeBag()
+    
+    subject.onNext("1")
+    subject.onNext("2")
+    subject.onNext("3")
+    //add three elements onto the subjects
+    
+    subject.subscrib{
+        print(label: "1)", event: $0)
+    }.disposed(by: disposeBag)
+    
+    subject.subscribe{
+        print(label: "2)", event: $0)
+    }.disposed(by: disposeBag)
+    
+    subject.onNext("4")
+    
+    subject.onError(MyError.anError)
+    
+    subject.dispose()
+    
+    // This may surprise you
+    // And if so, that's OK Life's full surprises
+    
+    subject.subscribe{
+        print(label: "3)", event: $0)
+    }.disposed(by: disposeBag)
+    
+    //create two subscriptions to the subject
+    
+    // 최신의 두 elements 만 subscribers에 replay 된다. 1은 방출되지 않는다. 왜냐하면 2 와 3은 replay subject에 buffer size 2 로 더해진다.
+    
+    // 그동안 방출된 이벤트 중 최근의 것들을 특정 사이즈만큼 캐시(버퍼)시켜 놓는다.
+    //이것을 새로운 구독자들에게 재방출한다.
+}
+```
 
 ## Variable
 
