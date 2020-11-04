@@ -106,7 +106,7 @@ subject.onNext("4")
 4 하나만 출력이 되는 것이죠!
 
 
-### Publish Subject
+## Publish Subject
 
    
 * Publish Subject   
@@ -144,15 +144,46 @@ subject.onNext("3")
 2) 3
 ```
 
+publish subject 도 .completed 또는 .error 이벤트를 받습니다 !! (후에 variable은 이 두가지 이벤트를 받지 않음)   
+stop event 를 새로운 subscribers에게 emit 한다 라고 책에는 복잡하게 쓰여져 있는데 말그대로, 더이상 emit 하지 않도록 정지시켜주는 이벤트들입니다.
+신기했던건 한번 이렇게 stop event를 emit 시켜주면, 그 다음에도 stop event 가 re-emit되어서 future subscribers에게도 영향을 미칩니다. 
+코드를 실행시켜보면 이해가 쉽게 될거에요
 
-###  Behavior Subject
+
+```swift
+
+    //1
+    subject.onCompleted()
+    //2
+    subject.onNext("5")
+    //3
+    subscriptionTwo.dispose()
+    let disposeBag = DisposeBag()
+    
+    //4
+    subject.subscribe {
+        print("3)", $0.element ?? $0)
+    }.disposed(by: disposeBag)
+    
+    subject.onNext("?")
+    
+    ```
+   
+
+   ```
+   2) completed
+   3) completed
+   ```
+    
+
+##  Behavior Subject
 
 
 
 ![스크린샷 2020-11-04 오후 12 32 48](https://user-images.githubusercontent.com/41604678/98066292-f558d000-1e99-11eb-879d-99bbc99f9966.png)
 
 
-### Replay Subject
+## Replay Subject
 저는 공부하면서 이 Replay Subject가 가장 인상깊었어요. 특히 그림이랑 같이 이해하려고 하는게 중요했던 것 같아요 
 
 ![스크린샷 2020-11-04 오후 12 32 54](https://user-images.githubusercontent.com/41604678/98066300-f984ed80-1e99-11eb-99ee-34f87edca10c.png)
@@ -166,7 +197,7 @@ subject.onNext("3")
 
 
 
-### Variable
+## Variable
 
 앞서 언급했듯 Variable 은 
 * BehaviorSubject를 래핑한다 !!! 
