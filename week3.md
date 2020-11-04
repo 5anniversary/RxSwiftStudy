@@ -137,7 +137,7 @@ let subscriptionTwo = subject.subscribe { event in print("2)", event.element ?? 
 subject.onNext("3")
 ```
 
-결과는 다음과 같습니다. 3 은 두번 출력되는데 왜그런걸까요 ?? 3은 이는 subscriptionOne ,subscriptionTwo 각각의 구독에 의한 출력입니다. 
+결과는 다음과 같습니다. 3 은 두 번 출력되는데 왜그런걸까요 ?? 3은 이는 subscriptionOne ,subscriptionTwo 각각의 구독에 의한 출력입니다. 
 
 ```
 3
@@ -178,12 +178,13 @@ stop event 를 새로운 subscribers에게 emit 한다 라고 책에는 복잡�
 ```
 
 
-   
-    
+
 
 ##  Behavior Subject
 
-
+* Behavior Subject   
+: 초기화 값을 가진 상태로 시작하는 것이 Publish Subject와의 차이점. 초기값을 방출하거나, 가장 최신의 (가장 늦은) element들을 새 subscribers에게 
+방출한다. 
 
 ![스크린샷 2020-11-04 오후 12 32 48](https://user-images.githubusercontent.com/41604678/98066292-f558d000-1e99-11eb-879d-99bbc99f9966.png)
 
@@ -223,7 +224,8 @@ example(of: "Behavior Subject")
 ```
  
  위의 코드는 subject에 대해 subscription을 만들어 주지만 subscription은 subject 이후에 생성됩니다. 이게 무슨말인가 하면.. ??
- 아직 subject에 아무런 요소들이 더해지지 않았기 때문에 여전히 subscriber에 초기화된 값을 replay (다시 방출한다. 책에서는 replay 라는 용어로 사용했음)할 것입니다. 그러니까 label이 아직 출력되지는 않아요 결과값은 다음과 같죠
+ 아직 subject에 아무런 요소들이 더해지지 않았기 때문에 여전히 subscriber에 초기화된 값을 replay (다시 방출한다. 책에서는 replay 라는 용어로 사용했음)할 것입니다.
+ 
  
  ```
  
@@ -234,11 +236,61 @@ example(of: "Behavior Subject")
  
 이해가 되시나요??? 말이 되게 어렵게 쓰여져 있는데, subscription이 아직 생성되지 않아서 초기화된 값(initialized value)가 출력되었어요.
 
+* Behavior Subject   
+: 초기화 값을 가진 상태로 시작하는 것이 Publish Subject와의 차이점. 초기값을 방출하거나, 가장 최신의 (가장 늦은) element들을 새 subscribers에게 
+방출한다. 
+
+다시 정의를 끌어와 보면 저 위의 예시에서는 초기값을 방출했다!!는 것을 확인한
+
+
+여기서 조금만 더 실험을 해봅시당
+
+   
+```swift
+       subject.onNext("X")
+    
+```
+
+console에는 X값이 출력되는 것을 확인할 수 있어요. 왜냐하면 이 상태에서는 "X"가 subscribtion 상태가 만들어질 때 가장 늦게(최신의) 만들어진 요소이기 때문에 "X"가 출력이 됩니다.
+
+```swift
+ subject.onError(MyError.anError)
+    //error 이벤틀를 subject에 추가해 주었습니다.
+    
+    subject.subscribe {
+        print(label: "2)", event: $0)
+    }.disposed(by: disposeBag)
+    
+```
+
+결과 값을 보면 이해가 되네요. subscribe 1 가장 최신의 element가 error 이벤트인데 label "1)", "2)" 과 같이 출력되어 찍히는걸 보면 새로운 subscriber들(라벨 표시한 코드블럭 두 개)에게 error 이벤트 값을 emit 시키는걸 확인할 수 있어요!!
+
+
+```
+1) anError
+2) anError
+
+```
+
+
+
+<BehaviorSubject 는 항상 최신의 element를 방출한다.> 라는 정의가 여기서 확인되네요.
+
+그렇지만 초기화값이 없는 경우에는 Publish Subject를 대신 사용하는 것이 옳다. 초기화 값이 없으면 emit할 element가 없겠죠 ?
+
 
 ## Replay Subject
-저는 공부하면서 이 Replay Subject가 가장 인상깊었어요. 특히 그림이랑 같이 이해하려고 하는게 중요했던 것 같아요 
+
+* Replay Subject   
+: 초기화 된 buffer size로 시작한다. 그 사이즈까지 buffer의 원소들을 유지하며 새로운 subscriber들에게 방출한다. 
+
+저는 공부하면서 이 Replay Subject가 가장 인상깊었어요. :_어려웠거든요 ^_^ 특히 그림이랑 같이 이해하려고 하는게 중요했던 것 같아요 
 
 ![스크린샷 2020-11-04 오후 12 32 54](https://user-images.githubusercontent.com/41604678/98066300-f984ed80-1e99-11eb-99ee-34f87edca10c.png)
+
+
+
+이름 그대로 buffer size 에 도달할 때까지 계속 방출해준다는 의미라고 이해하면 쉬울 것 같아요. 다른 개념들을 여기까지 이해했다면 쉽게 이해할 수 있어요.
 
 
 
