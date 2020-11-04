@@ -167,13 +167,18 @@ stop event 를 새로운 subscribers에게 emit 한다 라고 책에는 복잡�
     
     subject.onNext("?")
     
-    ```
+```
+    
+   결과는 다음과 같습니다. 정말로 future subscribers이 emit을 하지않았죠!!
    
+   
+```
+      2) completed
+      3) completed
+```
 
-   ```
-   2) completed
-   3) completed
-   ```
+
+   
     
 
 ##  Behavior Subject
@@ -181,6 +186,53 @@ stop event 를 새로운 subscribers에게 emit 한다 라고 책에는 복잡�
 
 
 ![스크린샷 2020-11-04 오후 12 32 48](https://user-images.githubusercontent.com/41604678/98066292-f558d000-1e99-11eb-879d-99bbc99f9966.png)
+
+
+첫번째 라인은 subject
+두번쨰 라인은 첫번째 subscriber로, 살펴보면 1) 이후 2) 직전에 1) subscription 을 갖게 됩니다. 그리고 2) 와 3) 은 subject에 의해 emit 되어요
+세번째 라인은 두번째 subscriber로, 2) 이후 3) 이전에 subscribes 하므로, 2) subscription을 즉시 갖게 되고 그 후에 3) 이 emit 됩니다.
+
+새로운 코드입니다 짠 확인해봅시당
+
+```
+enum MyError:Error {
+    case anError
+}
+
+func print<T: CustomStringConvertible>(label: String, event: Event<T>)
+{
+    print(label, event.element ?? event.error
+     ?? event)
+}
+
+example(of: "Behavior Subject")
+{
+    let subject = BehaviorSubject(value: "Initial value")
+    let disposeBag = DisposeBag()
+    
+}
+```
+
+먼저 error type을 정의해주었고, print function을 만들어 주었습니다.   그 다음에 example을 시작했고 example 안에 Behavior Subject를 초기화해주었어요.   
+
+그다음에 이 코드를 써주세요
+```swift 
+   subject.subcribe {
+        print(label: "1)", event: $0)
+    }.disposed(by: disposeBag)
+```
+ 
+ 위의 코드는 subject에 대해 subscription을 만들어 주지만 subscription은 subject 이후에 생성됩니다. 이게 무슨말인가 하면.. ??
+ 아직 subject에 아무런 요소들이 더해지지 않았기 때문에 여전히 subscriber에 초기화된 값을 replay (다시 방출한다. 책에서는 replay 라는 용어로 사용했음)할 것입니다. 그러니까 label이 아직 출력되지는 않아요 결과값은 다음과 같죠
+ 
+ ```
+ 
+ --- Example of: BehaviorSunject ---
+ 1) Initial value
+ 
+ ```
+ 
+이해가 되시나요??? 말이 되게 어렵게 쓰여져 있는데, subscription이 아직 생성되지 않아서 초기화된 값(initialized value)가 출력되었어요.
 
 
 ## Replay Subject
