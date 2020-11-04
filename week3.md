@@ -55,21 +55,33 @@ RxSwift를 설치한 파일에 Playgrond 파일을 추가해서 열어주세요~
 
 ### Variable
 
-앞서 언급했듯 Variable 은 BehaviorSubject를 래핑한다 !!! 그리고 그것의 현재 값을 상태로 저장한다.
-value 프로퍼티를 통해서 현재 값에 접근할 수 있다. 라는게 책에서 나오는 간단한 정의인데요 여기까지 들어만 봐도 앞에서 나온 다른 subjects들과는 좀 달라 보이지요 ?
-또한 value property를 variable에 새로운 요소를 정해주기 위해서 사용합니다. 이말은 onNext(_:) 매소드를 사용하지 않는다!
+앞서 언급했듯 Variable 은 
+* BehaviorSubject를 래핑한다 !!! 
+* 그리고 그것의 현재 값을 상태로 저장한다.
+* value 프로퍼티를 통해서 현재 값에 접근할 수 있다. 
 
-Variable은 Behavior subject를 래핑하므로 variable은 초기값과 함께 생성된다 ! 
+라는게 책에서 나오는 간단한 정의인데요 여기까지 들어만 봐도 앞에서 나온 다른 subjects들과는 좀 달라 보이지요 ?
+
+Variable을 사용시에 method와 관련해서, 주의해야할 것들이 몇 가지 있어요.
+
+* onNext(_:) 매소드를 사용하지 않는다!
+: 
+value property를 variable에 새로운 요소를 정해주기 위해서 사용합니다. 
+
+* asObservable() 
+: 
+Variable은 Behavior subject를 래핑하므로 variable은 초기값과 함께 생성됩니다.  
 (Behavoir subject는 초기값을 가지니까요~) 그리고 Variable은 가장 최신의 값 또는 초기값을 새 subscribers에게 replay 합니다.
 variable에 밑에 있는 behavior subject 에 접근하기 위한 메소드가 asObservable() 입니다.
 
+* error event 를 방출하지 않음
+:
 그리고 또 Variable의 독특한 점은, 다른 subjects들과 달리 error 를 방출하지 않도록 설정되어있답니다. _: 대체 왜 ?
-
 다시 말해서 .error event 가 subscription에 있다고 해도 .error event를 variable에 추가시킬수 없다는 것!! 
 
-variable은 deallocated되려고 하는 순간에 스스로 일을 완료시켜버립니다. 그래서 직접 .completed event를 추가해주지 않아도 됩니다 사실상 추가할 수 없어요.
+* complete event를 추가히지 않아도 됨
+: variable은 deallocated되려고 하는 순간에 스스로 일을 완료시켜버립니다. 그래서 직접 .completed event를 추가해주지 않아도 됩니다. 사실상 추가할 수 없어요.
 
-이 두가지 특징이 variable을 이용한 코드를 짤 때 크게 반영이 되는 것 같군요
 
 
 
