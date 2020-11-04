@@ -42,7 +42,7 @@ Subject에는 종류가 4가지가 있습니다. 원서에 나온 간단한 정�
 먼저 Publish Subject를 생성하는 것을 해보면서 subject에 대해 알아봅시당!! 
 신문 publisher 처럼 subject는 정보를 받고 이걸 subscribers에게 발행하는 역할을 합니다. 
 
-```
+```swift
 example(of: "PublishSubject"){
     let subject = PublishSubject<String>()
     }
