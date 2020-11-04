@@ -258,10 +258,8 @@ example(of: "Behavior Subject")
  
  
  ```
- 
  --- Example of: BehaviorSunject ---
  1) Initial value
- 
  ```
  
 이해가 되시나요??? 말이 되게 어렵게 쓰여져 있는데, subscription이 아직 생성되지 않아서 초기화된 값(initialized value)가 출력되었어요.
@@ -278,8 +276,7 @@ example(of: "Behavior Subject")
 
    
 ```swift
-       subject.onNext("X")
-    
+       subject.onNext("X")  
 ```
 
 console에는 X값이 출력되는 것을 확인할 수 있어요. 왜냐하면 이 상태에서는 "X"가 subscribtion 상태가 만들어질 때 가장 늦게(최신의) 만들어진 요소이기 때문에 "X"가 출력이 됩니다.
@@ -291,7 +288,6 @@ console에는 X값이 출력되는 것을 확인할 수 있어요. 왜냐하면 
     subject.subscribe {
         print(label: "2)", event: $0)
     }.disposed(by: disposeBag)
-    
 ```
 
 결과 값을 보면 이해가 되네요. subscribe 1 가장 최신의 element가 error 이벤트인데 label "1)", "2)" 과 같이 출력되어 찍히는걸 보면 새로운 subscriber들(라벨 표시한 코드블럭 두 개)에게 error 이벤트 값을 emit 시키는걸 확인할 수 있어요!!
@@ -373,8 +369,7 @@ example(of : "ReplaySubject") {
     subject.subscribe{
         print(label: "2)", event: $0)
     }.disposed(by: disposeBag)
-    //create twi subscriptions to the subject
-    
+    //create twi subscriptions to the subject  
 ```
 
 
@@ -404,7 +399,6 @@ subject.onNext("4") //new element
  subject.subscribe{
         print(label: "3)", event: $0)
 }.disposed(by: disposeBag) // new subscriptoin
-
 ```
 
 출력해보면??
@@ -414,7 +408,6 @@ subject.onNext("4") //new element
 2) 4
 3) 3
 3) 4
-
 ```
 어떤가요?? 많이 놀라지는 않았죠..?
 
@@ -431,9 +424,7 @@ subject.onNext("4") //new element
 자 여기서 끝내면 밋밋하니 한 줄 더 실험해봅시다 ^_^
 
 ```swift
-
 subject.onError(MyError.anError)
-
 ```
  
  음 결과가 어떨지 짐작이 가시나요?? 책에서는
@@ -447,7 +438,6 @@ subject.onError(MyError.anError)
  3) 3
  3) 4
  3) anError
- 
  ```
  
  
@@ -561,7 +551,7 @@ variable은 deallocated되려고 하는 순간에 스스로 일을 완료시켜�
 여기까지 variable에 대한 특징이었습니다. 코드를 봅시다.
 
 
-```
+```swift
 example(of: "Variable") {
 
     let variable = Variable("Initial value")
@@ -579,7 +569,6 @@ example(of: "Variable") {
     }.dispose(by: disposeBag)
     
 }
-
 ```
 
 1. 초기값을 가진 variable을 생성해주었고, String type으로 선언되었습니다.
@@ -593,13 +582,11 @@ example(of: "Variable") {
 ```
 --- Example of: Variable ---
 1) New initial value
-
 ```
 
 코드를 더 추가해 주세요!!
 
 ```swift
-
     variable.value = "1" //add a new element
     
     variable.asObservable().subscribe()
@@ -608,20 +595,17 @@ example(of: "Variable") {
     }.dispose(by: disposeBag) //create a new subscription to the variable
     
     variable.value = "2" 
-    // add another new element onto the variable
-    
+    // add another new element onto the variable  
 ```
 
 
 결과:
 
 ```
-
 1) 1
 2) 1
 1) 2
 2) 2
-
 ```
 
 존재하는 subscription 1)이 variable에 추가된 새로운 element인 1)을 받습니다. 그리고 새로운 subscription이 값은 value를 받습니다. 왜냐하면? 이게 가장 최신의 값이기 떄문
