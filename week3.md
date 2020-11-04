@@ -224,6 +224,8 @@ example(of: "Behavior Subject")
 ```
  
  위의 코드는 subject에 대해 subscription을 만들어 주지만 subscription은 subject 이후에 생성됩니다. 이게 무슨말인가 하면.. ??
+ 
+ 
  아직 subject에 아무런 요소들이 더해지지 않았기 때문에 여전히 subscriber에 초기화된 값을 replay (다시 방출한다. 책에서는 replay 라는 용어로 사용했음)할 것입니다.
  
  
@@ -240,7 +242,7 @@ example(of: "Behavior Subject")
 : 초기화 값을 가진 상태로 시작하는 것이 Publish Subject와의 차이점. 초기값을 방출하거나, 가장 최신의 (가장 늦은) element들을 새 subscribers에게 
 방출한다. 
 
-다시 정의를 끌어와 보면 저 위의 예시에서는 초기값을 방출했다!!는 것을 확인한
+다시 정의를 끌어와 보면 저 위의 예시에서는 초기값을 방출했다!!는 것이 위의 예시에서 확인되었습니당!
 
 
 여기서 조금만 더 실험을 해봅시당
@@ -329,13 +331,57 @@ example(of : "ReplaySubject") {
     subject.subscrib{
         print(label: "1)", event: $0)
     }.disposed(by: disposeBag)
+    
+    subject.subscribe{
+        print(label: "2)", event: $0)
+    }.disposed(by: disposeBag)
+    //create twi subscriptions to the subject
+    
 ```
+
+
+
+
+```
+--- Example of: ReplaySubject ---
+1) 2
+1) 3
+2) 2
+2) 3
+```
+
+최신의 두 elements 만(2, 3) subscribers에 replay 되고, 1은 방출되지 않아요. 왜냐하면 2 와 3은 replay subject에 buffer size 2 로 더해지기 때문입니다.
 
 
 
 바로 코드에 대해 이해가 가시나요 ?????
 
-여기서 책은 한줄 더 추가해보라고 시킵니다 ㅎㅎ
+여기서 책은 한줄 더 추가해보라고 합니다 ㅎㅎ
+
+```swift
+subject.onNext("4") //new element
+
+ subject.subscribe{
+        print(label: "3)", event: $0)
+}.disposed(by: disposeBag) // new subscriptoin
+
+```
+
+출력해보면??
+
+```
+1) 4
+2) 4
+3) 3
+3) 4
+
+```
+어떤가요?? 많이 놀라지는 않았죠..?
+
+이 코드에서 subject에 또 다른 element를 추가했고, 그 후에 새로운 subscription을 생성해 주었습니다. 맨 처음 두개의 supscriptions 는 element 값을 정상적으로 받아요.
+왜냐하면 얘네 둘은 이미 new element가 subject에 더해졌을 시점에 이미 subscriped 된 상태이기 때문입니다 그래서 4, 4가 출력되고
+
+3) 에서는 buffer size 2로 replay된 subject가 더해지게 되었습니다. 좀 전의 예시에서 replay된 것 처럼 말이죠.
 
 
 
