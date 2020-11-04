@@ -1,6 +1,8 @@
 Week3 Subjects 
 =========
 
+지난주에 이어서 Subject에 대해 공부해 봅시당!! 전반적으로 훑어보니 Observable에 대한 이해가 Subject를 이해하는 데에 큰 도움이 될 것 같군요
+
 # What is Subject?
 
 
@@ -19,13 +21,23 @@ Subject 는 지난 주에 같이 공부했던 Observable과 연관지어서 생�
 Subject에는 종류가 4가지가 있습니다. 
 
 * Publish Subject
-아무것도 없는 빈 상태로 subscribe를 시작하고, 오직 새로운 elements 만 subscriber에게 emit 시킨다. 
+: 아무것도 없는 빈 상태로 subscribe를 시작하고, 오직 새로운 elements 만 subscriber에게 emit 시킨다. 
 
 * Behavior Subject
-초기화 값을 가진 상태로 시작하는 것이 Publish Subject와의 차이점. 초기값을 방출하거나, 가장 최신의 (가장 늦은) element들을 새 subscribers에게 
+: 초기화 값을 가진 상태로 시작하는 것이 Publish Subject와의 차이점. 초기값을 방출하거나, 가장 최신의 (가장 늦은) element들을 새 subscribers에게 
 방출한다. 
 
 * Replay Subject
+: 초기화 된 buffer size로 시작한다. 그 사이즈까지 buffer의 원소들을 유지하며 새로운 subscriber들에게 방출한다. 
 
 * Variable
+: Variable은 Behavior Subject를 래핑하고, 현재의 값을 상태로 저장한다 . 그리고 초기값 또는 가장 최신의 값만 새로운 subscribers에게 방출시킨다. 
+
+이렇게 4가지 타입의 subject가 있어요!! 간단히 살펴보았고 지금부터는 타입별로 하나씩 코드와 함께 이해해 봅시당
+
+
+### Publish Subject
+
+
+
 
