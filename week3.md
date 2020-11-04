@@ -89,7 +89,21 @@ example(of: "PublishSubject"){
 }
 ```
 
+```swift
+subscriptionOne.dispose()
+subject.onNext("4")
 
+```
+
+다음 두 줄을 추가해주면 ?? subscriptionOne 이 dispose 됩니다.. 그래서 결과는
+
+```
+
+2) 4
+
+```
+
+4 하나만 출력이 되는 것이죠!
 
 
 ### Publish Subject
@@ -102,6 +116,33 @@ example(of: "PublishSubject"){
 ![스크린샷 2020-11-04 오후 12 32 43](https://user-images.githubusercontent.com/41604678/98066269-e40fc380-1e99-11eb-88c8-f00a652189cc.png)
 
 
+그림을 이해하면 어떻게 동작하는지 이해가 잘 되는것 같아요. 첫번째 줄이 subject이고 두번째 줄이 first subscriber, 세번째 줄이 second subscriber입니다.   
+두번째 줄에서, 첫번째 subscriber가 1) 다음에 subscribe 하는걸 볼수 있습니다. 그래서 1) 에 해당하는 event는 받을 수 없어요. 구독한 이후로 받은 2) 와 3)을 받게 됩니다. 
+두번째 subscriber도 이와 같은 원리로, 2) 이후로 subscribe 했기 때문에 3) 만 가져갑니다 ~
+
+다음의 코드를 이어서 추가해 주세요.
+
+
+```swift
+
+let subscriptionTwo = subject.subscribe { event in print("2)", event.element ?? event)}
+
+```
+
+```subscriptionTwo```는 아직 아무것도 print하지 않게됩니다. 왜냐하면 앞에서 1 과 2 가 이미 방출된 이후에 subscribe 했기 때문 !! 
+
+다음의 코드를 추가해서 subscription을 추가해줍니다.
+
+```swift
+subject.onNext("3")
+```
+
+결과는 다음과 같습니다. 3 은 두번 출력되는데 왜그런걸까요 ?? 3은 이는 subscriptionOne ,subscriptionTwo 각각의 구독에 의한 출력입니다. 
+
+```
+3
+2) 3
+```
 
 
 ###  Behavior Subject
