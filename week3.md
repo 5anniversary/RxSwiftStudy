@@ -16,11 +16,10 @@ Subject 는 지난 주에 같이 공부했던 Observable과 연관지어서 생�
 
 
 
-차이가 확연히 보이시나요? 
+차이가 확연히 보이시나요? subject는 multicast 방식을 취하는것을 확인할 수 있습니다. 
 
-#Types of Subjects
-
-Subject에는 종류가 4가지가 있습니다. 
+# Types of Subjects
+Subject에는 종류가 4가지가 있습니다. 원서에 나온 간단한 정의를 살펴보자면,
 
 * Publish Subject   
 : 아무것도 없는 빈 상태로 subscribe를 시작하고, 오직 새로운 elements 만 subscriber에게 emit 시킨다. 
@@ -40,7 +39,41 @@ Subject에는 종류가 4가지가 있습니다.
 
 ## Getting started
 
+먼저 Publish Subject를 생성하는 것을 해보면서 subject에 대해 알아봅시당!! 
+신문 publisher 처럼 subject는 정보를 받고 이걸 subscribers에게 발행하는 역할을 합니다. 
 
+```
+example(of: "PublishSubject"){
+    let subject = PublishSubject<String>()
+    }
+```
+
+<String> 타입을 받고 publish 하는 subject 를 생성해 주었습니다. 그다음으로 아래의 코드를 작성해주세요. 
+ 
+ ```
+ subject.onNext("Is anyone listening?")
+ 
+ ```
+ 새로운 element 를 subject에 추가해주었습니다. 그렇지만 여기까지 코드를 써주었을 때 console창에는 아무것도 찍히지가 않죠 !
+ observers가 없기 떄문입니다. 그렇다면 subject에 대한 subscription을 생성해 봅시다. 
+ 
+ ```
+    let subscriptionOne = subject.subscribe(onNext: { string in print(string)})
+    
+ ```
+
+여기까지 코드를 써주어도 Xcode에는 아무것도 출력되지 않아요 ㅠㅠ    
+
+ ```PublishSubject ``` 는 현재의 subscribers에게만 emit하기 때문입니다. 우리가 써준 코드에는 아직 subscriber가 없어요.
+ 
+ ```
+    subject.on(.next("1"))
+ ```
+   
+   
+이렇게 한줄 추가해주면 이제 드디어 subject는 subscriber가 생긴거에요.   
+그리고 당연히 <String> 타입으로 subject를 publish 했으니까 <String>타입만 값을 넣어줄 수 있겠죠.
+   
 ```
 example(of: "PublishSubject"){
     let subject = PublishSubject<String>()
@@ -55,9 +88,9 @@ example(of: "PublishSubject"){
 
 
 
+
 ### Publish Subject
 
-RxSwift를 설치한 파일에 Playgrond 파일을 추가해서 열어주세요~
 
 
 ###  Behavior Subject
