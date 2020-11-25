@@ -17,6 +17,8 @@ public func example(of description: String,
 }
 ```
 
+## Concatenation 
+
 ### 1. startWith
 
 
@@ -90,9 +92,83 @@ example(of: "concat") {
 
 ### 3. concatMap
 
+* 저번 시간에 배운 flatMap과 유사합니다.
+* closure 함수를 실행하면서 sequence 하나의 subscribe가 완료되어야 다음 sequence로 넘어간다고 하네요
+
+
+```swift
+example(of: "concatMap") {
+    let sequences = [
+        "Germany" : Observable.of("Berlin","Munich","FrankFrut"),
+        "Spain" : Observable.of("Madrid","Barcelona","Valencia")
+    ]
+    
+    let observable = Observable.of("Germany","Spain").concatMap { country in
+        sequences[country] ?? .empty()
+        
+    }
+    
+    _ = observable.subscribe(onNext : { string in
+        print(string)
+        
+    })
+    
+}
+``` 
+
+<img width="258" alt="스크린샷 2020-11-25 오후 12 52 01" src="https://user-images.githubusercontent.com/54928732/100181165-063ab580-2f1d-11eb-8d1d-27a5ba668856.png">
 
 
 
+
+## Merging
+
+![스크린샷 2020-11-25 오후 12 53 18](https://user-images.githubusercontent.com/54928732/100181258-32563680-2f1d-11eb-90bc-2491569a52c4.png)
+
+
+* 순서대로 합쳐준다 라고 생각하면 편해요.
+* 먼저 example 코드를 작성해볼게요. 
+
+
+
+```swift
+example(of: "merge") {
+    let left = PublishSubject<String>()
+    let right = PublishSubject<String>()
+    
+    let source = Observable.of(left.asObservable(),right.asObservable())
+    let observable = source.merge()
+    let disposable = observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    var leftValues = ["Berlin","Munich","FrankFrut"]
+    var rightValues = ["Madrid","Barcelona","Valencia"]
+    
+    repeat{
+        if arc4random_uniform(2) == 0{
+            if !leftValues.isEmpty {
+                left.onNext("Left : " + leftValues.removeFirst())
+            }
+            
+            
+        }
+        else if !rightValues.isEmpty {
+            right.onNext("Right : " + rightValues.removeFirst())
+        }
+
+        
+    }while !leftValues.isEmpty || !rightValues.isEmpty
+   
+    disposable.dispose()
+    
+}
+
+``` 
+
+* 위의 코드에서 left와 right 배열을 놓고, 랜덤하게 하나씩 onNext를 수행해요.
+* source에 속한 sequence가 onNext를 수행할때마다 받아서 곧바로 방출해요.
+* 내부에 속한 모든 sequence가 complete 되어야 merge()도 complete 됩니다.
 
 
 
