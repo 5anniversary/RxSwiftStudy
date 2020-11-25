@@ -275,12 +275,102 @@ example(of: "zip"){
 }
 
 ```
-
+<img width="254" alt="스크린샷 2020-11-25 오후 1 57 50" src="https://user-images.githubusercontent.com/54928732/100185042-35095980-2f26-11eb-806f-0a40a344826e.png">
 
 ## Triggers
 
 ### 1. withLatestFrom
 ![스크린샷 2020-11-25 오후 1 50 22](https://user-images.githubusercontent.com/54928732/100184580-2b332680-2f25-11eb-9175-5d2442af40f8.png)
+
+
+* 버튼 두번 탭으로 가장 최신 상태로 유지해주는 것을 의미합니다.. 이게 무슨 의미냐면
+
+```swift
+example(of: "withLatestFrom"){
+    
+    let button = PublishSubject<Void>()
+    
+    let textField = PublishSubject<String>()
+    
+    let observable = button.withLatestFrom(textField)
+    _ = observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    textField.onNext("Par")
+    textField.onNext("Pari")
+    textField.onNext("Paris")
+    button.onNext(())
+    button.onNext(())
+    
+    
+}
+
+```
+
+* 이 코드를 넣으시구,, 확인해봅시다. 
+<img width="279" alt="스크린샷 2020-11-25 오후 2 00 05" src="https://user-images.githubusercontent.com/54928732/100185173-8ade0180-2f26-11eb-9ff8-a510e6153624.png">
+
+* Paris가 두번 나온 것을 확인할 수 있어여..
+* 이거는 void가 들어있는 button에 onNext를 할 때 textField의 가장 최신 값인 Paris를 꺼내주기 때문이에요
+
+
+![스크린샷 2020-11-25 오후 2 02 31](https://user-images.githubusercontent.com/54928732/100185312-dee8e600-2f26-11eb-8f0d-bc931da901c4.png)
+
+
+
+* 이렇게 바꾸고 돌려도 가능합니다.
+
+* sample과 withLatestFrom의 차이는 
+sample          : parameter로 trigger observable을 받음
+withLatestFrom  : parameter로 data observable을 받음
+
+의 차이라고 하네요~
+
+
+## Switches 
+
+
+### 1. ambiguous
+
+![스크린샷 2020-11-25 오후 2 04 01](https://user-images.githubusercontent.com/54928732/100185407-135ca200-2f27-11eb-95aa-5427d43ead00.png)
+
+* ambiguous 에서는 여러 개를 ambiguous하게 subscribe 하고 있다가 가장 먼저 방출되는 원소를 확인하고 그 subject만 subscribe합니다
+
+```swift
+example(of: "amb") {
+    let left = PublishSubject<String>()
+    let right = PublishSubject<String>()
+    
+    let observable = left.amb(right)
+    let disposable = observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    left.onNext("Lisbon")
+    right.onNext("Copenhagen")
+    left.onNext("London")
+    left.onNext("Madrid")
+    right.onNext("Vienna")
+    
+    disposable.dispose()
+    
+}
+```
+* 위 코드에서는 Lisbon이 들어온 left만 subscribe가 되고, 나머지는 unsubscribe가 되는 것이에요.
+<img width="232" alt="스크린샷 2020-11-25 오후 2 10 45" src="https://user-images.githubusercontent.com/54928732/100185787-04c2ba80-2f28-11eb-97ef-14087741623e.png">
+
+## 2. switchLatest
+
+
+
+
+
+
+
+
+
+
 
 
 
