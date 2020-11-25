@@ -172,3 +172,56 @@ example(of: "merge") {
 
 
 
+## Combining Elements
+
+### 1. Combine Latest
+![스크린샷 2020-11-25 오후 1 09 49](https://user-images.githubusercontent.com/54928732/100182257-8530ed80-2f1f-11eb-97e8-991e0c4e7c91.png)
+
+
+* 가장 최신의 원소와 결합해주는 combine 입니다. 아래 코드를 작성해볼게요.
+
+
+```swift
+example(of: "combineLatest"){
+    let left = PublishSubject<String>()
+    let right = PublishSubject<String>()
+    
+    let observable = Observable.combineLatest(left,right,resultSelector:  { lastLeft, lastRight in
+        
+        "\(lastLeft)\(lastRight)"
+    })
+    
+    let disposable = observable.subscribe(onNext : {value in
+        
+        print(value)
+        
+    })
+    
+    print("> Sending a value to Left")
+    left.onNext("Hello,")
+    
+    print("> Sending a value to Right")
+    right.onNext("world")
+    
+    print("> Sending another value to Right")
+    right.onNext("RxSwift")
+    
+    print("> Sending another value to Left")
+    left.onNext("Have a good day")
+    
+    
+    
+    disposable.dispose()
+}
+
+``` 
+
+* left와 right의 가장 최근 원소가 결합되어서 나타나는 것을 볼 수 있어요~
+
+<img width="242" alt="스크린샷 2020-11-25 오후 1 23 06" src="https://user-images.githubusercontent.com/54928732/100183047-5c115c80-2f21-11eb-8a27-da9c4813aa4e.png">
+
+
+
+
+
+
