@@ -65,6 +65,30 @@ example(of: "Observable.concat") {
 
 <img width="311" alt="스크린샷 2020-11-25 오후 12 37 08" src="https://user-images.githubusercontent.com/54928732/100180158-ef935f00-2f1a-11eb-81bf-d23570d53110.png">
 
+EZ.
+
+
+```swift
+example(of: "concat") {
+    let germanCities = Observable.of("Berlin","Munich","FrankFrut")
+    let spanishCities = Observable.of("Madrid","Barcelona","Valencia")
+    
+    let observable = germanCities.concat(spanishCities)
+    
+    observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    
+}
+``` 
+
+* 위와 같이, Observable.concat이 아닌 기존의 observable 원소에 concat을 사용하여 하는 방식도 가능해요.
+* concat을 하기 위해서는 두 sequence의 타입이 같아야 한다는 점!
+
+
+
+### 3. concatMap
 
 
 
