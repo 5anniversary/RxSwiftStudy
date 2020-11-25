@@ -221,6 +221,76 @@ example(of: "combineLatest"){
 <img width="242" alt="스크린샷 2020-11-25 오후 1 23 06" src="https://user-images.githubusercontent.com/54928732/100183047-5c115c80-2f21-11eb-8a27-da9c4813aa4e.png">
 
 
+```swift 
+example(of : "combine user choice and value") {
+    let choice : Observable<DateFormatter.Style> = Observable.of(.short,.long)
+    
+    let dates = Observable.of(Date())
+    
+    let observable = Observable.combineLatest(choice,dates) { (format,when) -> String in
+        let formatter = DateFormatter()
+        formatter.dateStyle = format
+        return formatter.string(from: when)
+    }
+    
+    observable.subscribe(onNext : { value in
+        print(value)
+    })
+    
+    
+}
+```
+* 위의 코드를 보면, 다른 형식의 원소들도 합쳐질 수 있다는 것을 알 수 있어요~
+
+
+### 2. zip
+![스크린샷 2020-11-25 오후 1 44 41](https://user-images.githubusercontent.com/54928732/100184225-5ff2ae00-2f24-11eb-8efd-8c239db769a2.png)
+
+* sequence를 하나로 묶어주는 역할을 해요.
+* 하나의 원소를 받으면, 짝이 맞을때까지 기다렸다가 짝으로 묶고 방출해줍니다.
+* 이 때, 하나의 sequence가 끝나버리면 나머지 sequence에 원소가 남아있어도 종료됩니다.
+
+``` swift
+example(of: "zip"){
+    
+    enum Weather {
+        case cloudy
+        case sunny
+        
+    }
+    
+    let left : Observable<Weather> = Observable.of(.sunny,.cloudy,.cloudy,.sunny)
+    let right = Observable.of("Lisbon","Copenhagen","London","Madrid","Vienna")
+    
+    let observable = Observable.zip(left,right) { weather, city in
+        return "It's \(weather) in \(city)"
+    }
+    
+    observable.subscribe(onNext : {value in
+        print(value)
+        
+    })
+    
+    
+}
+
+```
+
+
+## Triggers
+
+### 1. withLatestFrom
+![스크린샷 2020-11-25 오후 1 50 22](https://user-images.githubusercontent.com/54928732/100184580-2b332680-2f25-11eb-9175-5d2442af40f8.png)
+
+
+
+
+
+
+
+
+
+
 
 
 
