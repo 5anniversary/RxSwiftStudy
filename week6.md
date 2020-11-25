@@ -362,6 +362,127 @@ example(of: "amb") {
 
 ## 2. switchLatest
 
+* 가장 최근에 방출된 원소로 switch 해주는 operator입니다.
+
+```swift
+example(of: "switchLatest") {
+    let one = PublishSubject<String>()
+    let two = PublishSubject<String>()
+    let three = PublishSubject<String>()
+    
+    
+    let source = PublishSubject<Observable<String>>()
+    
+    let observable = source.switchLatest()
+    let disposable = observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    source.onNext(one)
+    one.onNext("Some text from sequence one")
+    two.onNext("Some text from sequence two")
+    
+    source.onNext(two)
+    two.onNext("More text from sequence two")
+    one.onNext("and also from sequence one")
+    
+    source.onNext(three)
+    two.onNext("Why don't you see me?")
+    one.onNext("I'm alone, help me")
+    three.onNext("Hey it's three. I win.")
+    
+    source.onNext(one)
+    one.onNext("Nope it's me, one!")
+    
+    
+    disposable.dispose()
+}
+
+```
+* 결과를 보면, one,two,three 중 가장 최근에 방출된 원소의 텍스트가 출력되는 것을 확인할 수 있어요.
+<img width="226" alt="스크린샷 2020-11-25 오후 2 16 35" src="https://user-images.githubusercontent.com/54928732/100186167-d4c7e700-2f28-11eb-95fa-079d5da98b44.png">
+
+
+## Combining Elements within a Sequence
+
+### 1. reduce
+
+![스크린샷 2020-11-25 오후 2 22 37](https://user-images.githubusercontent.com/54928732/100186612-ac8cb800-2f29-11eb-809c-f82ef2279a3c.png)
+
+
+* reduce는 sequence를 진행하면서 어떤 수행을 해줘요
+
+```swift
+
+example(of : "reduce"){
+    let source = Observable.of(1,3,5,7,9)
+    
+    let observable = source.reduce(0, accumulator: +)
+    
+
+    observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    
+}
+
+
+```
+
+* 위와 같이 코드를 작성하면, 0 + 전체 합을 해줍니다.
+
+
+```swift
+
+example(of : "reduce"){
+    let source = Observable.of(1,3,5,7,9)
+    
+    let observable = source.reduce(0, accumulator: {summary, newValue in
+        return summary + newValue
+
+    })
+    observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    
+}
+
+
+```
+
+* 둘은 같은 역할을 해요. 하지만 클로저를 통해서 다른 역할을 하게 할 수 있다는 점.
+
+
+
+### 2. scan
+
+
+![스크린샷 2020-11-25 오후 2 28 34](https://user-images.githubusercontent.com/54928732/100187002-83b8f280-2f2a-11eb-89d1-385be88dc54f.png)
+
+
+
+* scan의 경우 하나의 리턴값을 갖는 게 아니라 매 원소마다의 경과를 보여줍니다.
+
+```swift
+
+example(of : "scan"){
+    let source = Observable.of(1,3,5,7,9)
+    
+    
+    let observable = source.scan(0, accumulator: +)
+
+    observable.subscribe(onNext : {value in
+        print(value)
+    })
+    
+    
+}
+``` 
+* 위의 코드를 작성하면 알 수 있어요.
+
+
 
 
 
