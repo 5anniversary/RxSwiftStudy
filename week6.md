@@ -42,4 +42,33 @@ example(of : "startWith") {
 
 ### 2. concat
 
+![스크린샷 2020-11-25 오후 12 33 29](https://user-images.githubusercontent.com/54928732/100179951-71cf5380-2f1a-11eb-8d36-fced69cfe24c.png)
+
+
+* 1의 startWith는 concat에서 파생되어 나온 것.
+* 두 sequence를 이어주는 역할을 해요
+* 아래의 코드를 작성해주세요
+
+
+```swift
+example(of: "Observable.concat") {
+    let first = Observable.of(1,2,3)
+    let second = Observable.of(4,5,6)
+    
+    let observable = Observable.concat([first,second])
+    
+    observable.subscribe(onNext : {value in
+        print(value)
+    })
+}
+```
+
+<img width="311" alt="스크린샷 2020-11-25 오후 12 37 08" src="https://user-images.githubusercontent.com/54928732/100180158-ef935f00-2f1a-11eb-81bf-d23570d53110.png">
+
+
+
+
+
+
+
 
