@@ -1,21 +1,36 @@
-# welcome to RxCocoa!  
+</br>  
+
+
+<h1 align="center"> welcome to HOLY RxCocoa!  </h1>
+
+<p align="center"> 
+<img src="https://user-images.githubusercontent.com/37579661/102693843-d56e4780-4260-11eb-9ece-49d1e5c36369.png" width=200>
+</p>  
+
+
+
 > 시작한지 정말 오래되었는데..!  
 > 아직 뭔가 개념만 본 느낌이죠 여러분...  
-> 하지만! 이번 RxCocoa 세션에서는 정말로 뭔가를.. 적용해보는 느낌으루다가~~ 할 예정입니다! 
-> 다들 buckle up!  
+> 하지만! 이번 RxCocoa 세션에서는 정말로 뭔가를.. 적용해보는 느낌으루다가~~ 할 예정입니다!  
+> 다들 **buckle up!**  
 
-# RxCocoa?  
+</br>
+
+## :coffee: RxCocoa?  
 책에서는 단순히, `part of the original RxSwift repository` 라고 소개한다.  
 
 RxCocoa는 모든 플랫폼에서 작동을 하는데, 심지어! Apple Tv,에서도... 작동한다구 한당 ( 물론 기본적으로 iOS, macOS 에서도 작동함. )  
 
+</br>
 
-# 오늘의 프로젝트!   
+## 오늘의 프로젝트!   
 `Wundercast` 라는 앱을 구현해 볼 것인뎅..!!  
 OpenWeatherMap http://openweathermap.org 에서 제공하는 정보를 가져와주는! 어플이다.  
 따라서 `SwiftyJSON`을 Rxcocoa 와 함께 import 해서 OpenWeatherMap API와 통신을 하는 앱이다.  
 
-# 먼저 Starter.  
+</br>
+
+## 먼저 Starter.  
 starter 파일에 있는 것을 일단 시작해보자!!  
 다들 눈치를 챘겠지만! `RxCocoa` 를 pod install 하여 사용하여야한다~~  
 ( 벗어날 수 없눈 pod 의 세계... )  
@@ -28,9 +43,17 @@ starter 파일에 있는 것을 일단 시작해보자!!
 
 이 프로젝트에서는 `UITextField`, 그리고 `UILabel` 에 대한 두개의 `wrappers` 를 사용하기 때문에 이 두 파일이 어떻게 돌아가는지 이해하는게 중요하다!  
 
-여기서 잠깐.. what the fuck  is `wrapper`..  
 
-# wrapper  
+
+<h3 align="center"> 여기서 잠깐.. what the fuck  is `wrapper`..    </h3>
+
+<p align="center"> 
+<img src="https://user-images.githubusercontent.com/37579661/102693946-5c232480-4261-11eb-9b22-a16420f70179.png" width=400>
+</p>  
+
+</br>
+
+## wrapper  
 > 나눈 초보.. 난 잘몰라성 찾아보아따..!!!  
 
 wrapper는 말그대로 `감싼다`는 것인데,  
@@ -41,8 +64,9 @@ wrapper는 말그대로 `감싼다`는 것인데,
 더 자세한 내용은~ 
 https://medium.com/harrythegreat/swift-properywrapper%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EA%B0%92%EC%B2%98%EB%A6%AC-a8ef0d87e8e
 
+</br>
 
-# 다시 돌아와서.. UITextField!  
+## 다시 돌아와서.. UITextField!  
 
 ![image](https://user-images.githubusercontent.com/37579661/102689409-371eb980-4241-11eb-8973-10f515e91f3b.png)
 
@@ -52,14 +76,16 @@ UITextField 를 잘 보면, `ControlProperty` 라는 것이 있다.
 
 그리고 `name of the property`는, `무엇`이 observe 될 수 있는지에 대해 알려준다!  
 
+</br>
 
 따라서 사진과 같이  
 ![image](https://user-images.githubusercontent.com/37579661/102689493-e196dc80-4241-11eb-9e94-dce54f5d30e1.png)
 
  `text` 라고 되어있다면 이 proprety는 직접적으로 UITextField 안에 있는 text에 연관이 되어있음을 알 수 있다.  
 
+</br>
 
-# UILabel + Rx  
+## UILabel + Rx  
 
 UILabel파일을 보게되면,  
 두개의 새로운 property를 볼 수 있다~~  
@@ -77,8 +103,9 @@ UILabel파일을 보게되면,
 
 그래서 만약에 error 가 `UIBindingObserver` 으로 들어가게 되면??? 그냥 `fatalError()` 가 호출된다~~ 물론 error log에 추가 된댱.  
 
+</br>
 
-# binder  
+## binder  
 binder 에 대해서 제대로 같이 이해해보고자 한다.  
 근데 일단 rxcocoa책 을 다 읽고 시간이 된다면 설명을 추가해보겠당...  
 시간이 안되면.....  
@@ -87,7 +114,7 @@ https://iospanda.tistory.com/entry/RxSwift-10-RxCocoa-1
 
 </br>
 
-# Let's BEGIN BUILDING THIS THANG!  
+## Let's BEGIN BUILDING THIS THANG!  
 
 일단 짜증나지만 ( 분명 이 책에서 이 사이트에서 돈을 받은게 분명해! )  
 
@@ -147,8 +174,11 @@ https://home.openweathermap.org/users/sign_up.
 이런 dummy data 가 있으면 우리 앱의 개발 과정을 간단히 만들어주는데 도와주고, 그리고!!  
 직접 actual data 구조로 개발을 하는데 문제가 없이 돌아가게 해준당 (인터넷이 연결안되어 있어도 개발할 수 있게 도와줌. )  
 
+</br>
 
-# 이 프로젝트는 one single view!  
+</br>
+
+## 이 프로젝트는 one single view!  
 
 그냥 간단히 `ApiController` 를 `viewController` 에 추가해주는 **uni-directional data flow** 구조이다!!  
 
@@ -162,8 +192,15 @@ observable 은
 <h3 align="center"> 여러분 어디일까요!!!</h3>
 </br>  
 
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
 
-# Subscribe 를 해야하는 장소  
+## Subscribe 를 해야하는 장소  
 바로.. ViewController 에서 `viewDidLoad` 입니당...!!  
 
 그 이유는,  
@@ -187,8 +224,10 @@ observable 은
 
 
 근뎅.. 에러가 뚠당..  
+</br>
+</br>
 
-# compiler error  
+## compiler error  
 ```swift
 Result of call to 'subscribe(onNext:onError:onCompleted:onDisposed:)' is unused 
 ```
@@ -219,8 +258,10 @@ view controller 가 release 될 때 마다 자동으로 구독이 취소/dispose
 ------------
 여기까지 했으면 이제 원래 생겼던 노랑색 에러는 뜨지 않는다!  
 에러 해결 띠~  
+</br>
+</br>
 
-# Textfield 연결  
+## Textfield 연결  
 rxCocoa 는 **protocol extensions** 을 활용하고, 그리고 `rx` space(naming space) 를 UIKit 컴포넌트에 추가하여 사용하게 된다!!  
 즉, 이제 우리는~~  
 ```swift
@@ -283,11 +324,15 @@ nil 이거나 빈 값이면 필터해주고, 그리고 weather data 의 경우�
 그래서 이제는 인풋값에 변화가 생기면, 
 라벨이 그 해당 도시의 이름에 따라 데이터를 자동으로 업데이트 시켜줄 것이고,  
 근데 아직은 APIcontroller 를 제대로 연결하지 않아서 아직 dummy data 를 보여주게 된당.   
+</br>
+</br>
 
 **최종 viewDidLoad() 의 모습**  
 
 ![image](https://user-images.githubusercontent.com/37579661/102693152-d5b81400-425b-11eb-9185-da6c2a902f7c.png)
 
+</br>
+</br>
 
 ## catchErroJustReturn operator 는 또 머야  
 이것은!! 바로 API 에서 에러가 들어왔을 때 observable 이 dispose 되어버리는 현상을 막기 위해서 보조장치로 설치해놓는 것이당.  
@@ -298,8 +343,10 @@ nil 이거나 빈 값이면 필터해주고, 그리고 weather data 의 경우�
 이렇게 되었을 때 앱이 다운되어버리면 에바띠....  
 따라서 404 에러가 왔을 때에는 그냥 **empty value** 가 리턴되도록 처리해놓는 것이 바로 이것이당.  
 
+</br>
+</br>
 
-# OpenWeather API 에서 데이터 받긔  
+## OpenWeather API 에서 데이터 받긔  
 일단 인터넷 연결 확인하긔 ㅋ  
 
 그리고 들어오는 JSON 데이터 형식은 다음과 같당  
@@ -357,10 +404,11 @@ func currentWeather(city: String) -> Observable<Weather> {
 이렇게 되면 JSON 객체를 요청으로 반환해주고, 그리고 `Weather` 데이터 구조로 fallback value 와 함께 변환되게 된다.  
 
 이제! 모든 준비가 되었다. 
+</br>
+</br>
 
-# result 
+## result 
 
-![simulator_screenshot_96F13A54-20B0-4F91-B835-55A927F4E3CD](https://user-images.githubusercontent.com/37579661/102692983-a81e9b00-425a-11eb-9064-c526f006118d.png)
-!
-reenshot_A0A2A570-8B86-48E4-B7CE-8518D540C853](https://user-images.githubusercontent.com/37579661/102692990-aead1280-425a-11eb-8591-4dbd27e4aa31.png)
-
+| **unknown input 의 경우** |  **valid input 의 경우**  |
+| :------------: | :------------: |
+|![simulator_screenshot_96F13A54-20B0-4F91-B835-55A927F4E3CD](https://user-images.githubusercontent.com/37579661/102692983-a81e9b00-425a-11eb-9064-c526f006118d.png)|![simulator_screenshot_A0A2A570-8B86-48E4-B7CE-8518D540C853](https://user-images.githubusercontent.com/37579661/102692990-aead1280-425a-11eb-8591-4dbd27e4aa31.png) |
