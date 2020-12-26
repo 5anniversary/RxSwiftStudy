@@ -32,6 +32,6 @@
 | 5    | [Transforming](week5.md)                              | [Jaeyong](https://github.com/wody27)                         |
 | 6    | [Combining Operators](week6.md)                       | [Yunjae](https://github.com/qodhrkawk)                       |
 | 7    | [Time Based Operators](week7_1.md), Beginning RxCocoa | [5anniversary](https://github.com/5anniversary), [MinseungSeon](https://github.com/minseungseon) |
-| 8    | Intermediate RxCocoa, [Error Handling in Practice](week8_2 .md) | [freemjstudio](https://github.com/freemjstudio), [이과정](https://github.com/gwajeong) |
+| 8    | Intermediate RxCocoa, [Error Handling in Practice](week8_2%20.md) | [freemjstudio](https://github.com/freemjstudio), [이과정](https://github.com/gwajeong) |
 | 9    | Intro To Schedulers, Testing with RxTest              | [Jaeyong](https://github.com/wody27), [Yunjae](https://github.com/qodhrkawk) |
 
