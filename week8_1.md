@@ -1,13 +1,13 @@
-Ch.13 Intermediate RxCocoa
+## Ch.13 Intermediate RxCocoa
 
-1. Intro - Intermediate RxCocoa
----------------
+# 1. Intro - Intermediate RxCocoa
+
 
 RxCocoa의 활용을 지난시간에서 UI 컴포넌트들을 활용하며 제작했지만, RxCocoa는 UI를 위한 것 만이 아니다. 기본적으로 Apple의 공식 프레임 워크들을 '래핑'하여 사용자화하는 것이 목적이다.
 핫한 MVVM 패턴은 챕터 23을 참고하면 좋을 것 같습니다.
 
-2. 예제
-------------
+# 2. 예제
+
  * activity indicator 검색할동안 표시하는 기능을 추가로 구현하기
 
  
