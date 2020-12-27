@@ -167,3 +167,22 @@ extension NSObject: ReactiveCompatible { }
      }
  }
  ```
+ 
+ 
+ 
+ APIController.swft에 다음 함수를 추가해주세요 
+ 
+ 
+  ```Swift
+     func currentWeather(lat: Double, lon: Double) -> Observable<Weather> {
+        return buildRequest(pathComponent: "weather", params: [("lat", "\(lat)"), ("lon", "\(lon)")]).map() { json in
+            return Weather(
+                cityName: json["name"].string ?? "Unknown",
+                temperature: json["main"]["temp"].int ?? -1000,
+                humidity: json["main"]["humidity"].int  ?? 0,
+                icon: iconNameToChar(icon: json["weather"][0]["icon"].string ?? "e"),
+                lat: json["coord"]["lat"].double ?? 0,
+                lon: json["coord"]["lon"].double ?? 0
+            )
+        }
+    ```
