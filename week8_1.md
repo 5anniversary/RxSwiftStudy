@@ -1,6 +1,6 @@
 # Ch.13 Intermediate RxCocoa
 
-활용도가 많은 RxCocoa 두번째 시간이 돌아왔습니당~~ 지난시간의 예제 Wundercast를 활용합니다. 사실 오늘 발표내용보다 더 많은 내용이 있으니.. 책을 참고하여 더 공부하면 좋겠습니다.
+활용도가 많은 RxCocoa 두번째 시간이 돌아왔습니당~~ 지난시간의 예제 Wundercast를 활용합니다. 사실 오늘 발표내용보다 더 많은 내용이 있으니 책을 참고하여 더 공부하면 좋겠습니다.
 
 ## 1. Intro - Intermediate RxCocoa
 
@@ -23,10 +23,12 @@ RxCocoa의 활용을 지난시간에서 UI 컴포넌트들을 활용하며 제�
  
  ViewController.swift의 viewDidLoad() 의 style() 호출 아래에 추가
  
+ ```Swift
   let searchInput = searchCityName.rx.controlEvent(.editingDidEndOnExit).asObservable()
          .map { self.searchCityName.text }
          .filter { ($0 ?? "").count > 0 }
  
+```
 
 viewDidLoad()의 기존의 코드를 다음과 같이 수정함.
 ```Swift
