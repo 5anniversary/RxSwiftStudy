@@ -16,10 +16,14 @@ RxCocoa의 활용을 지난시간에서 UI 컴포넌트들을 활용하며 제�
  참고로 지난주에 했던, 기존의  OpenWeatehrMap의 API를 사용합니다
  
  
- 도시를 입력하면 우리 앱에서는 다음과 같은 로직이 이루어져야 한다. 
+ 도시를 입력하면 다음과 같은 로직이 이루어져야 합니다.
+ 
+
+ <img width="601" alt="스크린샷 2020-12-27 오전 10 22 00" src="https://user-images.githubusercontent.com/41604678/103163110-fb858000-483c-11eb-8f72-a7697dccfa13.png">
+
  원서에서는 검색 버튼을 따로 만들어서 search pressed라고 한 것 같아요
  
- (사진 참조)
+ 
  
  ViewController.swift의 viewDidLoad() 의 style() 호출 아래에 추가
  
@@ -69,6 +73,9 @@ viewDidLoad()의 기존의 코드를 다음과 같이 수정함.
  
  .asObservable() 호출은 타입추론을 위해 필요하고 이것 이후에 두 개의 observable을 합칠 수 있다.
  .startWith(ture)는 앱이 시작할 때 모든 label을 수동적으로 숨길 필요가 없게 해주는 아주아주 편리한 기능을 한다!!
+ 
+ <img width="625" alt="스크린샷 2020-12-27 오전 11 54 18" src="https://user-images.githubusercontent.com/41604678/103163113-0c35f600-483d-11eb-94fe-ee8aa7015a1f.png">
+
  
  
  ```Swift
