@@ -7,6 +7,7 @@ RxTest로 테스팅 해보기
 
 오늘은 RxTest를 이용해서 test를 해보는 방법을 배울겁니다.
 
+그런데 오늘 배울 내용은 기존에 iOS에서 XCTest를 사용해 봐야 이해하기가 쉽다네요 ㅠㅠ 
 
 
 </br>
@@ -14,16 +15,64 @@ RxTest로 테스팅 해보기
 ---
 
 
-## 에러 ! 
+## Hot과 Cold observable
 
-* 에러는 어떤 앱에서나 없을 수가 없기 때문에 우리는 항상 이걸 고려해주어야 합니다! 
-* 앱에서 주로 생기는 에러에는 이런 것들이 있습니다.
-	1. 인터넷 연결 없음: 아주 흔한 에러 중 하나!! 만약 앱이 인터넷 연결을 통해 데이터를 받아와야하는데 기기가 오프라인 상태가 된다면? -> 이에 대응을 해줘야합니다.
-	2. 잘못된 입력: 사용자가 우리가 입력하기를 바라는 형식의 입력을 주지 않을 경우가 있습니다. 예를 들어 숫자를 입력해야하는 칸에 글자를 입력하는 경우 ,,,
-	3. API 또는 HTTP 에러: API를 통한 에러는 아주 광범위하게 일어납니다. 표준 HTTP 에러(400 또는 500 에러)를 통해 표시되거나 JSON 내 `status` 필드를 통해 표시될 수 있습니다.
+* Hot과 Cold observable 개념은 testing에서 주로 언급되는 개념이라고 해요.
+
+* Hot Observable 특징
+	1. Subscriber가 없어도 자원을 사용
+	2. Subscriber가 없어도 element를 생성
+	3. Variable과 같은 stateful type과 같이 사용됨
+	
+	
+* Cold Observable 특징
+	1. Subscriber가 있어야 자원을 사용
+	2. Subscriber가 있어야 element 생성
+	3. 주로 networking과 같은 async operation에 사용됨
+
+오늘 프로젝트에서는 Hot Observable을 사용하게 될건데요, 차이를 아는 것은 중요하다고 하네용
+
+	
+  </br>
+
+먼저 TestingOperators.swift 파일을 열어줍니다.
+
+```swift
+
+var scheduler: TestScheduler!
+var subscription: Disposable!
+
+```
+
+TestScheduler는 테스트에 사용도리 스케줄러이고, 내장되어있는 클래스에요.
+subscription은 각 테스트의 구독 정보를 저장하는 변수입니다.
+
+```swift
+override func setUp() {
+  super.setUp()
+    
+  scheduler = TestScheduler(initialClock: 0)
+}
+
+```
+그리고 위 부분에서 TestScheduler를 init 해주는데, initClock : 0 이라는 뜻은 시작할 때 스케줄러를 활성화하는 것을 의미해요
+
+
+
+```swift
+override func tearDown() {
+  scheduler.scheduleAt(1000) {
+    self.subscription.dispose()
+  }
+
+  scheduler = nil
+  super.tearDown()
+}
+
+```
+
   
-  </br>
-  </br>
+  
   
  RxSwift에서의 에러관리 이렇게 두 가지 방법으로 해결을 할 수 있습니다 !
 
