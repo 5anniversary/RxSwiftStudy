@@ -9,6 +9,7 @@ RxTest로 테스팅 해보기
 
 그런데 오늘 배울 내용은 기존에 iOS에서 XCTest를 사용해 봐야 이해하기가 쉽다네요 ㅠㅠ 
 
+RxTest는 별도로 pod install을 해야 사용할 수 있어요.
 
 </br>
   
@@ -123,7 +124,151 @@ override func tearDown() {
 
 * 그리고 이 두 observable을 amb로 이어주는데요, Combining Operator에서 배운 Ambiguous 기억나시나요??
 
-* amb로 두 observable을 이어줄거에요. 
+* amb로 두 observable을 이어줄거에요. 마지막에는 ["1", "2", "3"] 으로 잘 결과가 나오는지 확인할겁니당
+
+<img width="678" alt="스크린샷 2021-01-31 오전 11 58 30" src="https://user-images.githubusercontent.com/54928732/106373312-a4cf1100-63bb-11eb-91a7-d59f3c22a649.png">
+
+* 위 부분에 나오는 다이아몬드를 클릭하면 테스팅을 해볼 수 있어요. 위에서 1,2,3 중에 아무거나 하나를 바꾸고 돌리면 Test Fail이 나는 것도 확인할 수 있습니다
+
+
+# TestFilter
+
+* 예전에 배운 Filter도 Testing을 통해 확인해볼거에요.
+
+```swift
+func testFilter() {
+    // 1
+    let observer = scheduler.createObserver(Int.self)
+
+    // 2
+    let observable = scheduler.createHotObservable([
+      .next(100, 1),
+      .next(200, 2),
+      .next(300, 3),
+      .next(400, 2),
+      .next(500, 1)
+    ])
+
+    // 3
+    let filterObservable = observable.filter {
+      $0 < 3
+    }
+
+    // 4
+    scheduler.scheduleAt(0) {
+      self.subscription = filterObservable.subscribe(observer)
+    }
+
+    // 5
+    scheduler.start()
+
+    // 6
+    let results = observer.events.compactMap {
+      $0.value.element
+    }
+
+    // 7
+    XCTAssertEqual(results, [1, 2, 2, 1])
+  }
+
+```
+
+* 아까와 같은 방식인데, 이번에는 예전에 배운 filter를 이용해 테스팅을 해볼거에요. 
+* 3보다 작은 것만 나오니 1,2,2,1 순서가 맞겠죠?
+
+
+# RxBlocking
+
+* RxBlocking 역시 별도의 pod 설치가 필요한 library 입니다
+* 얘는 toBlocking(timeOut: ) 메소드를 통해 현재 스레드를 block 해서 observable이 terminate 되기를 기다리거나 특정 시간동안 멈출 수 있는 것이에요
+* 만약에 observable이 terminate 되기 전에 timeOut이 다 돼서 불리면 error를 throw 해준다네요
+
+```swift 
+
+ func testToArray() throws {
+    // 1
+    let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
+
+    // 2
+    let toArrayObservable = Observable.of(1, 2).subscribeOn(scheduler)
+
+    // 3
+    XCTAssertEqual(try toArrayObservable.toBlocking().toArray(), [1, 2])
+  }
+
+```
+
+우리가 여기서 한 것은
+	1. 비동기 스케줄러를 하나 생성
+	2. 두 개의 integer를 가지는 observable 생성
+	3. [1,2] 와 일치하는지 비교해주는 부분
+	
+위의 부분은 비동기 처리로 일어났어요. toArrayObservable이 toBlocking() 이 되는 순간 scheduler에 의해 생성된 스레드를 멈추고 테스팅합니다.
+
+</br>
+
+* RxBlocking은 materialize operator를 가지고 있어요. 얘는 blocking operation이 잘 수행되었는지를 확인해줍니다. 
+
+```swift
+public enum MaterializedSequenceResult<T> {
+  case completed(elements: [T])
+  case failed(elements: [T], error: Error)
+}
+
+```
+* observable이 성공적으로 terminate되면 success, 그렇지 않으면 failed를 리턴하게 돼요.
+
+```swift
+  func testToArrayMaterialized() {
+    // 1
+    let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
+
+    let toArrayObservable = Observable.of(1, 2).subscribeOn(scheduler)
+
+    // 2
+    let result = toArrayObservable
+      .toBlocking()
+      .materialize()
+
+    // 3
+    switch result {
+    case .completed(let elements):
+      XCTAssertEqual(elements,  [1, 2])
+    case .failed(_, let error):
+      XCTFail(error.localizedDescription)
+    }
+  }
+
+
+```
+
+* 위의 코드에서는 앞선 테스트에 materialize를 추가한 코드입니다. 위와 같이 하면 modeling을 하는 과정을 추가하게 되고,
+* 테스팅 과정이 안정적이고 뚜렷해진다하네요
+
+</br>
+
+---
+
+# ViewModel
+
+viewModel.swift 파일로 가주세요~
+
+<img width="559" alt="스크린샷 2021-01-31 오후 12 27 54" src="https://user-images.githubusercontent.com/54928732/106373723-c0d4b180-63bf-11eb-976d-ca75562eade8.png">
+
+이번에 사용될 앱은 위 그림과 같이 hex 숫자를 입력하면 r,g,b 10진수 값으로 바꿔주고 색 이름을 출력해주는 앱이에요
+
+그러기 위해서 
+
+```swift
+  let hexString = BehaviorRelay(value: "")
+  let color: Driver<UIColor>
+  let rgb: Driver<(Int, Int, Int)>
+  let colorName: Driver<String>
+
+
+```
+
+이렇게 각각을 나타낼 변수가 필요합니다
 
 
 
@@ -132,9 +277,3 @@ override func tearDown() {
 
 
 
-
-
-
-
-  
-  
