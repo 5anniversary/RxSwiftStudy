@@ -271,9 +271,179 @@ viewModel.swift 파일로 가주세요~
 이렇게 각각을 나타낼 변수가 필요합니다
 
 
+이제 다시 ViewController로 가줄게요
+
+```swift
+ override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    configureUI()
+    
+    guard let textField = self.hexTextField else { return }
+    
+    textField.rx.text.orEmpty
+      .bind(to: viewModel.hexString)
+      .disposed(by: disposeBag)
+    
+    for button in buttons {
+      button.rx.tap
+        .bind {
+          var shouldUpdate = false
+          
+          switch button.titleLabel!.text! {
+          case "⊗":
+            textField.text = "#"
+            shouldUpdate = true
+          case "←" where textField.text!.count > 1:
+            textField.text = String(textField.text!.dropLast())
+            shouldUpdate = true
+          case "←":
+            break
+          case _ where textField.text!.count < 7:
+            textField.text!.append(button.titleLabel!.text!)
+            shouldUpdate = true
+          default:
+            break
+          }
+          
+          if shouldUpdate {
+            textField.sendActions(for: .valueChanged)
+          }
+        }
+        .disposed(by: disposeBag)
+    }
+    
+    viewModel.color
+      .drive(onNext: { [unowned self] color in
+        UIView.animate(withDuration: 0.2) {
+          self.view.backgroundColor = color
+        }
+      })
+      .disposed(by: disposeBag)
+    
+    viewModel.rgb
+      .map { "\($0.0), \($0.1), \($0.2)" }
+      .drive(rgbTextField.rx.text)
+      .disposed(by: disposeBag)
+    
+    viewModel.colorName
+      .drive(colorNameTextField.rx.text)
+      .disposed(by: disposeBag)
+  }
+
+```
+
+
+* ViewDidLoad에서 하는 일은 다음과 같아요
+	1. textField의 text를 viewModel의 hexString과 binding
+	2. 버튼 눌릴때마다 해당하는 기능들 수행
+	3. view의 background color를 새로운 컬러로 변경
+	4. rgb textField의 text를 수정
+	5. colorName을 알맞게 띄우기
+	
+</br>
+
+다시 ViewModel.swift로 돌아올게요
+
+```swift
+func testColorIsRedWhenHexStringIsFF0000_async() {
+    let disposeBag = DisposeBag()
+
+    // 1
+    let expect = expectation(description: #function)
+
+    // 2
+    let expectedColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+
+    // 3
+    var result: UIColor!
+
+    // 1
+    viewModel.color.asObservable()
+      .skip(1)
+      .subscribe(onNext: {
+        // 2
+        result = $0
+        expect.fulfill()
+      })
+      .disposed(by: disposeBag)
+
+    // 3
+    viewModel.hexString.accept("#ff0000")
+
+    // 4
+    waitForExpectations(timeout: 1.0) { error in
+      guard error == nil else {
+        XCTFail(error!.localizedDescription)
+        return
+      }
+
+      // 5
+      XCTAssertEqual(expectedColor, result)
+    }
+  }
+
+
+```
+
+위의 코드에서 해주는 일은
+	1. model의 color driver를 subscribe해요. (1번째는 스킵하는데, 이는 기존의 color이기 때문)
+	2. onNext로 fulfill() 함수를 호출
+	3. view model의 hexString에 새로운 값을 대입
+	4. 1.0초를 기다리고, error를 확인(1초 후에 fulfill이 되었는지)
+
+
+이를 응용해서 다른 테스팅들을 해볼 수 있어요
+
+```swift
+ func testColorIsRedWhenHexStringIsFF0000() throws {
+    // 1
+    let colorObservable = viewModel.color.asObservable().subscribeOn(scheduler)
+
+    // 2
+    viewModel.hexString.accept("#ff0000")
+
+    // 3
+    XCTAssertEqual(try colorObservable.toBlocking(timeout: 1.0).first(),
+                   .red)
+  }
+```
+
+HexString == FF0000 일 때 red인지
+
+```swift
+ func testRgbIs010WhenHexStringIs00FF00() throws {
+    // 1
+    let rgbObservable = viewModel.rgb.asObservable().subscribeOn(scheduler)
+
+    // 2
+    viewModel.hexString.accept("#00ff00")
+
+    // 3
+    let result = try rgbObservable.toBlocking().first()!
+
+    XCTAssertEqual(0 * 255, result.0)
+    XCTAssertEqual(1 * 255, result.1)
+    XCTAssertEqual(0 * 255, result.2)
+  }
+
+```
+00FF00일 때 rgb값을 확인
 
 
 
+```swift
+func testColorNameIsRayWenderlichGreenWhenHexStringIs006636() throws {
+    // 1
+    let colorNameObservable = viewModel.colorName.asObservable().subscribeOn(scheduler)
 
+    // 2
+    viewModel.hexString.accept("#006636")
 
+    // 3
+    XCTAssertEqual("rayWenderlichGreen", try colorNameObservable.toBlocking().first()!)
+  }
 
+```
+
+colorName도 잘 나오는지 
