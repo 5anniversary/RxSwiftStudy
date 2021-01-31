@@ -1,22 +1,14 @@
-# Ch.14 Error Handling in Practice
+# Ch.16 Testing with RxTest
 </br>
 
 
-12장에서 민승이와 함께 실습했던 예제와 이어지는 내용입니다.
-</br>
-이번 장에서는 에러를 관리하는 방법을 배워보겠습니다 
-</br>
+RxTest로 테스팅 해보기
 </br>
 
-
-* 제가 올려둔 starter 파일을 받아주세요 (week8_error_handling)
-* pod install을 해주세요
-* 전에 받았던 api 키 값을 입력해주세요
+오늘은 RxTest를 이용해서 test를 해보는 방법을 배울겁니다.
 
 
-```swift
-let apiKey = BehaviorSubject(value: "[YOUR KEY]")
-```
+
 </br>
   
 ---
